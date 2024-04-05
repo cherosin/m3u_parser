@@ -36,7 +36,7 @@ func main() {
 }
 
 func renderFile(file string) {
-	fmt.Println("abrindo - ", file)
+	// fmt.Println("abrindo - ", file)
 	data, err := os.Open(file)
 	if err != nil {
 		fmt.Println("skippando ", file, " err: ", err)
@@ -68,11 +68,20 @@ func renderFile(file string) {
 	}
 
 	var path = regexp.MustCompile(`[^\x00-\x7F]+`).ReplaceAllString(artist+" - "+m.Title(), "")
+	path = strings.ReplaceAll(path, "\\", "")
+	path = strings.ReplaceAll(path, "/", "")
+	path = strings.ReplaceAll(path, ":", "")
+	path = strings.ReplaceAll(path, "*", "")
+	path = strings.ReplaceAll(path, "?", "")
+	path = strings.ReplaceAll(path, "\"", "")
+	path = strings.ReplaceAll(path, "<", "")
+	path = strings.ReplaceAll(path, ">", "")
+	path = strings.ReplaceAll(path, "|", "")
 	path = strings.ReplaceAll(path, "  ", " ")
 	path = strings.ReplaceAll(path, "__", "_")
 
 	if m.Picture() == nil {
-		fmt.Println("erro pegando imagem")
+		fmt.Println("skippando ", file, " err: ", err)
 		return
 	}
 
@@ -100,5 +109,5 @@ func renderFile(file string) {
 	cmd.Stdout = &outb
 	cmd.Stderr = &errb
 	cmd.Run()
-	fmt.Println("out:", outb.String(), "err:", errb.String())
+	// fmt.Println("out:", outb.String(), "err:", errb.String())
 }

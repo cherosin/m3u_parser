@@ -67,8 +67,8 @@ func renderFile(file string) {
 		artist = "BLANK"
 	}
 
-	var path = regexp.MustCompile(`[^\x00-\x7F]+`).ReplaceAllString(artist+"-"+m.Title()+".jpg", "")
-	path = strings.ReplaceAll(path, " ", "_")
+	var path = regexp.MustCompile(`[^\x00-\x7F]+`).ReplaceAllString(artist+" - "+m.Title(), "")
+	path = strings.ReplaceAll(path, "  ", " ")
 	path = strings.ReplaceAll(path, "__", "_")
 
 	if m.Picture() == nil {
@@ -76,7 +76,7 @@ func renderFile(file string) {
 		return
 	}
 
-	f, err := os.Create("img/" + path)
+	f, err := os.Create("img/" + path + ".jpg")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -95,7 +95,7 @@ func renderFile(file string) {
 
 	// var renderName = m.Artist() + " - " + m.Title()
 	// var renderName = randSeq(10)
-	cmd := exec.Command("ffmpeg", "-r", "1", "-loop", "1", "-i", "./img/"+path+"", "-i", file, "-c:a", "copy", "-shortest", "-pix_fmt", "yuv420p", "render/"+path+".mp4")
+	cmd := exec.Command("ffmpeg", "-r", "1", "-loop", "1", "-i", "./img/"+path+".jpg", "-i", file, "-c:a", "copy", "-shortest", "-pix_fmt", "yuv420p", "render/"+path+".mp4")
 	var outb, errb bytes.Buffer
 	cmd.Stdout = &outb
 	cmd.Stderr = &errb
